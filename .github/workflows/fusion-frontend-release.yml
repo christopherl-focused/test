@@ -1,0 +1,27 @@
+name: Fusion Frontend Release
+
+on:
+  push:
+    tags: ['fusion-frontend-v*']
+
+jobs:
+  release:
+    name: Build and release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#fusion-frontend-v}"
+          echo "Version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Simulate build
+        run: |
+          echo "Would build fusion.frontend.Dockerfile with version ${{ steps.version.outputs.version }}"
+          echo "Would push to ECR: network-control-fusion-frontend-nonprod:${{ steps.version.outputs.version }}"
+          echo "Would run terraform plan for infrastructure/fusion-frontend/"
+          echo "Release pipeline triggered successfully!"
